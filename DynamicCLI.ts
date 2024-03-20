@@ -79,6 +79,18 @@ class DynamicCLI {
 
   // Delete Page
   public deletePage (id: string) {
+    if (this._pages[id] === undefined) throw new Error(`Page Not Found: "${id}"`)
+
+    if (this._data.currentPage !== undefined) {
+      const currentPageIndex = Object.keys(this._pages).indexOf(this._data.currentPage)
+
+      delete this._pages[id]
+
+      const pages = Object.keys(this._pages)
+
+      if (pages.length === 0) this._data.currentPage = undefined
+      else if (currentPageIndex >= pages.length) this._data.currentPage = pages[pages.length - 1]
+    } else delete this._pages[id]
   }
 
   // Listen To Event
