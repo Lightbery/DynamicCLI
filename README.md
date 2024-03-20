@@ -21,7 +21,7 @@ new DynamicCLI()
   * [createPage()](#createpage)
   * [deletePage()](#deletepage)
   * [listen()](#listen)
-* [Component](#component)
+* [TextColor](#component)
 * [TextColor](#textcolor)
 * [BackgroundColor](#backgroundcolor)
 
@@ -93,7 +93,7 @@ new DynamicCLI(<options>) // Create a CLI
 * `name <string>` | The name of the event.
 * `callback <function>` | The function that triggers when the event is called.
 
-**- Events -**
+**- All Events -**
 | name       | callback data                | description                         |
 | ---        | ---                          | ---                                 |
 | scroll     | ({ page, cursorY, scrollY }) | Triggered when user scrolls.        |
@@ -102,3 +102,41 @@ new DynamicCLI(<options>) // Create a CLI
 | input      | (key)                        | Triggered when user input.          |
 
 > `return <undefined>`
+
+# Component
+```ts
+import { Component } from './DynamicCLI'
+
+Component.<name>(<parameters>)
+```
+**- All Components -**
+
+| name        | parameters    | description                                                         |
+| ---         | ---           | ---                                                                 |
+| blank       | ()            | A blank line.                                                       |
+| text        | (callback)    | A line of text, callback must be a function that return a <string>. |
+| pageTabs    | ()            | A line of page tabs.                                                |
+| pageContent | ()            | Multiple lines of page content.                                     |
+| input       | (placeholder) | A line of input.                                                    |
+
+# TextColor
+```ts
+import { TextColor } from './DynamicCLI'
+
+TextColor.<name>
+```
+
+**- All Colors -**
+
+`reset`, `red`, `brightRed`, `yellow`, `brightYellow`, `green`, `brightGreen`, `cyan`, `brightCyan`, `blue`, `brightBlue`, `purple`, `brightPurple`, `white`, `black`, `gray`
+
+# BackgroundColor
+```ts
+import { BackgroundColor } from './DynamicCLI'
+
+BackgroundColor.<name>
+```
+
+**- All Colors -**
+
+`reset`, `red`, `brightRed`, `yellow`, `brightYellow`, `green`, `brightGreen`, `cyan`, `brightCyan`, `blue`, `brightBlue`, `purple`, `brightPurple`, `white`, `black`, `gray`
