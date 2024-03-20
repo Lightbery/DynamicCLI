@@ -91,6 +91,8 @@ class DynamicCLI {
       if (pages.length === 0) this._data.currentPage = undefined
       else if (currentPageIndex >= pages.length) this._data.currentPage = pages[pages.length - 1]
     } else delete this._pages[id]
+
+    return this
   }
 
   // Listen To Event
