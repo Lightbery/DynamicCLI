@@ -19,6 +19,11 @@ new DynamicCLI()
   * [setLayout()](#setlayout)
   * [setStyle()](#setstyle)
   * [createPage()](#createpage)
+  * [deletePage()](#deletepage)
+  * [listen()](#listen)
+* [Component](#component)
+* [TextColor](#textcolor)
+* [BackgroundColor](#backgroundcolor)
 
 # DynamicCLI
 ```ts
