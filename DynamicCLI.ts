@@ -16,37 +16,41 @@ class DynamicCLI {
   public interval!: any
   public interface!: readline.Interface
 
+  private _size: { width: undefined | number, height: undefined | number } = { width: undefined, height: undefined }
   private _pages: { [key: string]: Page } = {}
   private _data: { input: string, currentPage: undefined | string } = { input: '', currentPage: undefined }
   private _listeners: { [key: string]: { (...args: any): any }[] } = {}
 
   constructor (options?: DynamicCliOptions) {
-    options = Object.assign({
-      render: true,
-      renderInterval: 50
-    }, (options === undefined) ? {} : options)
+    if (options === undefined) options = {}
 
-    if (options.render) this.interval = setInterval(() => this._render(), options.renderInterval)
+    if (options.render) this.interval = setInterval(() => console.log(process.stdout.write(`\x1B[2J\x1B[3J\x1B[H\x1Bc${this.render().join('\n')}\n${TextColor.reset}`)), options.renderInterval || 50)
 
-    this.interface = readline.createInterface({
-      input: process.stdin,
-      output: process.stdout
-    })
+    if (options.input) {
+      this.interface = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout
+      })
 
-    process.stdin.on('data', (data) => this._handleInput(data))
+      process.stdin.on('data', (data) => this._handleInput(data))
+    }
   }
 
+  public get size () {return this._size}
   public get pages () {return Object.keys(this._pages)}
   public get input () {return this._data.input}
   public get currentPage () {return this._data.currentPage}
 
-  // Set Layout
-  public setLayout (layout: any[]): DynamicCLI {
-    layout.forEach((component) => {
-      const allComponentsID = Object.keys(Component).map((name) => Component[name]().type)
+  // Set Size
+  public setSize (width: undefined | number, height: undefined | number): DynamicCLI {
+    this._size = { width, height }
 
-      if (!allComponentsID.includes(component.type)) throw new Error(`Component Not Found: "${component.type}"`)
-    }) 
+    return this
+  }
+
+  // Set Layout
+  public setLayout (layout: { type: 'blank' | 'text' | 'pageTabs' | 'pageContent' | 'input', [key: string]: any }[]): DynamicCLI {
+    this._layout = layout
 
     return this
   }
@@ -120,20 +124,22 @@ class DynamicCLI {
   }
 
   // Render
-  private _render (): void {
+  public render (): string[] {
     let lines: any[] = []
 
     this._layout.forEach((component) => lines = lines.concat(this._renderComponent(component)))
 
-    while (lines.length < process.stdout.rows - 1) lines.push('')
+    const size = this._getSize()
 
-    lines = lines.slice(0, process.stdout.rows - 1).map((line) => {
+    while (lines.length < size.height - 1) lines.push('')
+
+    lines = lines.slice(0, size.height - 1).map((line) => {
       let characters = this._sperateColor(line.replaceAll('\n', '\\n'))
       let planText = characters.map((character) => character.text).join('')
 
-      if (wcwidth(planText) < process.stdout.columns) characters.push({ color: this._style.background, text: ' '.repeat(process.stdout.columns - wcwidth(planText)) })
+      if (wcwidth(planText) < size.width) characters.push({ color: this._style.background, text: ' '.repeat(size.width - wcwidth(planText)) })
       else {
-        while (wcwidth(planText) > process.stdout.columns) {
+        while (wcwidth(planText) > size.width) {
           characters = characters.slice(0, characters.length-1)
           planText = planText.substring(0, planText.length-1)
         }
@@ -142,7 +148,7 @@ class DynamicCLI {
       return `${this._style.background}${characters.map((character) => `${(character.color === undefined) ? '' : character.color}${character.text}`).join('')}`
     })
 
-    process.stdout.write(`\x1B[2J\x1B[3J\x1B[H\x1Bc${lines.join('\n')}\n${TextColor.reset}`)
+    return lines
   }
 
   // Render Component
@@ -160,6 +166,8 @@ class DynamicCLI {
 
       return [` ${tabs.join(' ')} `]
     } else if (component.type === 'pageContent') {
+      const size = this._getSize()
+
       const lines: string[] = []
 
       if (this._data.currentPage !== undefined) {
@@ -167,7 +175,7 @@ class DynamicCLI {
 
         page.content = page.callback()
 
-        for (let i = page.scrollY; i < page.scrollY + (process.stdout.rows - this._layout.length) && i < page.content.length; i++) {
+        for (let i = page.scrollY; i < page.scrollY + (size.height - this._layout.length) && i < page.content.length; i++) {
           const lineNumber: string = (i + 1).toString().padStart(2, ' ')
 
           if (page.cursorY === i) lines.push(`${this._style.selectBackground} ${this._style.selectFont}${lineNumber}${TextColor.reset}${this._style.background} | ${page.content[i]}`) 
@@ -175,26 +183,30 @@ class DynamicCLI {
         }
       }
 
-      while (lines.length < process.stdout.rows - this._layout.length) lines.push('')
+      while (lines.length < size.height - this._layout.length) lines.push('')
 
       return lines
     }
 
     if (component.type === 'input') {
+      const size = this._getSize()
+
       let string: string = ` ${(this._data.input.length > 0) ? `${this._style.selectBackground}${this._style.selectFont}` : `${this._style.notSelectBackground}${this._style.notSelectFont}`} `
 
       if (this._data.input.length > 0) string += this._data.input
-      else {
-        if (component.placeholder === undefined) string += `⇧⇩ Scroll | ⇦⇨ Switch Page | Type to give input`
-        else string += component.placeholder
-      }
+      else string += component.placeholder || `⇧⇩ Scroll | ⇦⇨ Switch Page | Type to give input`
 
-      string += ' '.repeat(process.stdout.columns - wcwidth(this._sperateColor(string).map((character) => character.text).join('') + ' ')) + this._style.background
+      string += ' '.repeat(size.width - wcwidth(this._sperateColor(string).map((character) => character.text).join('') + ' ')) + this._style.background
 
       return [string]
     }
 
     return []
+  }
+
+  // Get Size
+  private _getSize (): { width: number, height: number } {
+    return { width: this._size.width || process.stdout.columns, height: this._size.height || process.stdout.rows }
   }
 
   // Seperate Color
@@ -245,7 +257,9 @@ class DynamicCLI {
 
           this._callEvent('scroll', { page: this._data.currentPage, cursorY: page.cursorY, scrollY: page.scrollY })
         } else if (hex === keys.downArrow) {
-          if (page.cursorY - page.scrollY < (process.stdout.rows - this._layout.length) - 1 && page.cursorY < page.content.length - 1) page.cursorY++
+          const size = this._getSize()
+
+          if (page.cursorY - page.scrollY < (size.height - this._layout.length) - 1 && page.cursorY < page.content.length - 1) page.cursorY++
           else if (page.cursorY < page.content.length - 1) {
             page.cursorY++
             page.scrollY++
@@ -279,7 +293,7 @@ class DynamicCLI {
 
       this._callEvent('input', this._data.input)
     } else {
-      const regex = /^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/
+      const regex = /^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/? ]*$/
 
       if (regex.test(data.toString())) this._data.input+=data.toString().replaceAll('\n', '')
 
@@ -359,7 +373,9 @@ class BackgroundColor {
 // DynamicCliOptions
 interface DynamicCliOptions {
   render?: boolean,
-  renderInterval?: number
+  renderInterval?: number,
+
+  input?: true
 }
 
 // Style
