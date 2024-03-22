@@ -24,7 +24,7 @@ new DynamicCLI()
   * [simulateInput()](#simulateinput)
   * [switchPage()](#switchpage)
   * [listen()](#listen)
-* [TextColor](#component)
+* [Component](#component)
 * [TextColor](#textcolor)
 * [BackgroundColor](#backgroundcolor)
 
