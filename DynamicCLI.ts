@@ -78,7 +78,7 @@ class DynamicCLI {
   }
 
   // Delete Page
-  public deletePage (id: string) {
+  public deletePage (id: string): void {
     if (this._pages[id] === undefined) throw new Error(`Page Not Found: "${id}"`)
 
     if (this._data.currentPage !== undefined) {
@@ -91,8 +91,6 @@ class DynamicCLI {
       if (pages.length === 0) this._data.currentPage = undefined
       else if (currentPageIndex >= pages.length) this._data.currentPage = pages[pages.length - 1]
     } else delete this._pages[id]
-
-    return this
   }
 
   // Set Input
