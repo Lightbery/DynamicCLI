@@ -95,15 +95,32 @@ class DynamicCLI {
     return this
   }
 
+  // Set Input
+  public setInput (string: string): void {
+    this._data.input = string
+  }
+
+  // Simulate Input
+  public simulateInput (data: Buffer): void {
+    this._handleInput(data)
+  }
+
+  // Switch Page
+  public switchPage (id: string): void {
+    if (this._pages[id] === undefined) throw new Error(`Page Not Found: "${id}"`)
+
+    this._data.currentPage = id
+  }
+
   // Listen To Event
-  public listen (name: string, callback: (...args: any) => any): undefined {
+  public listen (name: string, callback: (...args: any) => any): void {
     if (this._listeners[name] === undefined) this._listeners[name] = []
 
     this._listeners[name].push(callback)
   }
 
   // Render
-  private _render (): undefined {
+  private _render (): void {
     let lines: any[] = []
 
     this._layout.forEach((component) => lines = lines.concat(this._renderComponent(component)))
@@ -212,7 +229,7 @@ class DynamicCLI {
   }
 
   // Handle Input
-  private _handleInput (data: Buffer) {
+  private _handleInput (data: Buffer): void {
     const hex = data.toString('hex')
 
     if ([keys.upArrow, keys.downArrow, keys.leftArrow, keys.rightArrow].includes(hex)) {
@@ -271,7 +288,7 @@ class DynamicCLI {
   }
 
   // Call Event
-  private _callEvent (name: string, data: any) {
+  private _callEvent (name: string, data: any): void {
     if (this._listeners[name] !== undefined) this._listeners[name].forEach((callback) => callback(data))
   }
 }
