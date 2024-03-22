@@ -20,6 +20,9 @@ new DynamicCLI()
   * [setStyle()](#setstyle)
   * [createPage()](#createpage)
   * [deletePage()](#deletepage)
+  * [setInput()](#setinput)
+  * [simulateInput()](#simulateinput)
+  * [switchPage()](#switchpage)
   * [listen()](#listen)
 * [TextColor](#component)
 * [TextColor](#textcolor)
@@ -85,6 +88,30 @@ new DynamicCLI(<options>) // Create a CLI
 * `id <string>` | The ID of the page.
 
 > `return <DynamicCLI>`
+
+## setInput
+```ts
+.setInput(<string>) // Set the input
+```
+* `string <string>` | The content of the input.
+
+> `return <undefined>`
+
+## simulateInput
+```ts
+.simulateInput(<data>) // Simulate user input
+```
+* `data <Buffer>` | The input you want to simulate.
+
+> `return <undefined>`
+
+## switchPage
+```ts
+.switchPage(<id>) // Switch page
+```
+* `id <string>` | The id of the page.
+
+> `return <undefined>`
 
 ## listen
 ```ts
