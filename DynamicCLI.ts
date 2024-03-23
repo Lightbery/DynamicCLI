@@ -31,6 +31,19 @@ class DynamicCLI {
         input: process.stdin,
         output: process.stdout
       })
+    }
+
+    if (options.render) {
+      console.log('\u001B[?25l')
+
+      this.interval = setInterval(() => console.log(process.stdout.write(`\x1B[2J\x1B[3J\x1B[H\x1Bc${this.render().join('\n')}\n${TextColor.reset}`)), options.renderInterval || 50)
+    }
+
+    if (options.input) {
+      this.interface = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout
+      })
 
       process.stdin.on('data', (data) => this._handleInput(data))
     }
@@ -40,6 +53,17 @@ class DynamicCLI {
   public get pages () {return Object.keys(this._pages)}
   public get input () {return this._data.input}
   public get currentPage () {return this._data.currentPage}
+ 
+  // Stop
+  public stop () {
+    if (this.interval === undefined) throw new Error('Cannot Stop The CLI')
+
+    clearInterval(this.interval)
+
+    this.interval = undefined
+
+    console.log('\u001B[?25h')
+  }
 
   // Set Size
   public setSize (width: undefined | number, height: undefined | number): DynamicCLI {

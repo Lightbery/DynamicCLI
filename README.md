@@ -16,6 +16,7 @@ new DynamicCLI()
 ## Contents
 * [DynamicCLI](#dynamiccli)
   * [Getters](#getters)
+  * [stop()](#stop)
   * [setLayout()](#setlayout)
   * [setStyle()](#setstyle)
   * [createPage()](#createpage)
@@ -42,6 +43,13 @@ new DynamicCLI(<options>) // Create a CLI
  * `.pages <string[]>` | Get IDs of all the pages.
  * `.input <string>` | Get user input.
  * `.currentPage <string>` | Get the ID of current page.
+
+## Stop
+```ts
+.stop() // Stop the CLI
+```
+
+> `return <undefined>`
 
 ## setLayout()
 ```ts
