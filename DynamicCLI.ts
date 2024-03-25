@@ -339,57 +339,57 @@ class Component {
 }
 
 // Text Color
-class TextColor {
-  public static get reset () {return '\x1b[0m'}
+const TextColor: { [key: string]: string } = {
+  reset: '\x1b[0m',
 
-  public static get red () {return '\x1b[31m'}
-  public static get brightRed () {return '\x1b[92m'}
+  red: '\x1b[31m',
+  brightRed: '\x1b[92m',
 
-  public static get yellow () {return '\x1b[33m'}
-  public static get brightYellow () {return '\x1b[93m'}
+  yellow: '\x1b[33m',
+  brightYellow: '\x1b[93m',
 
-  public static get green () {return '\x1b[32m'}
-  public static get brightGreen () {return '\x1b[92m'}
+  green: '\x1b[32m',
+  brightGreen: '\x1b[92m',
 
-  public static get cyan () {return '\x1b[36m'}
-  public static get brightCyan () {return '\x1b[96m'}
+  cyan: '\x1b[36m',
+  brightCyan: '\x1b[96m',
 
-  public static get blue () {return '\x1b[34m'}
-  public static get brightBlue () {return '\x1b[94m'}
+  blue: '\x1b[34m',
+  brightBlue: '\x1b[94m',
 
-  public static get purple () {return '\x1b[35m'}
-  public static get brightPurple () {return '\x1b[95m'}
+  purple: '\x1b[35m',
+  brightPurple: '\x1b[95m',
 
-  public static get white () {return '\x1b[97m'}
-  public static get black () {return '\x1b[30m'}
-  public static get gray () {return '\x1b[90m'}
+  white: '\x1b[97m',
+  black: '\x1b[30m',
+  gray: '\x1b[90m'
 }
 
 // Background Color
-class BackgroundColor {
-  public static get reset () {return '\x1b[0m'}
+const BackgroundColor: { [key: string]: string } = {
+  reset: '\x1b[0m',
 
-  public static get red () {return '\x1b[41m'}
-  public static get brightRed () {return '\x1b[101m'}
+  red: '\x1b[41m',
+  brightRed: '\x1b[101m',
 
-  public static get yellow () {return '\x1b[43m'}
-  public static get brightYellow () {return '\x1b[103m'}
+  yellow: '\x1b[43m',
+  brightYellow: '\x1b[103m',
 
-  public static get green () {return '\x1b[42m'}
-  public static get brightGreen () {return '\x1b[102m'}
+  green: '\x1b[42m',
+  brightGreen: '\x1b[102m',
 
-  public static get cyan () {return '\x1b[46m'}
-  public static get brightCyan () {return '\x1b[106m'}
+  cyan: '\x1b[46m',
+  brightCyan: '\x1b[106m',
 
-  public static get blue () {return '\x1b[44m'}
-  public static get brightBlue () {return '\x1b[104m'}
+  blue: '\x1b[44m',
+  brightBlue: '\x1b[104m',
 
-  public static get purple () {return '\x1b[45m'}
-  public static get brightPurple () {return '\x1b[105m'}
+  purple: '\x1b[104m',
+  brightPurple: '\x1b[105m',
 
-  public static get white () {return '\x1b[107m'}
-  public static get black () {return '\x1b[40m'}
-  public static get gray () {return '\x1b[100m'}
+  white: '\x1b[107m',
+  black: '\x1b[40m',
+  gray: '\x1b[100m'
 }
 
 // DynamicCliOptions
@@ -423,7 +423,7 @@ interface Page {
 
 export { DynamicCLI, Component, TextColor, BackgroundColor }
 
-const keys = {
+const keys: { [key: string]: string } = {
   upArrow: '1b5b41',
   downArrow: '1b5b42',
   leftArrow: '1b5b44',
