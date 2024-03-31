@@ -44,7 +44,7 @@ new DynamicCLI(<options>) // Create a CLI
  * `.input <string>` | Get user input.
  * `.currentPage <string>` | Get the ID of current page.
 
-## Stop
+## Stop()
 ```ts
 .stop() // Stop the CLI
 ```
