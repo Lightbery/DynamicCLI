@@ -1,4 +1,4 @@
-import { DynamicCLI } from '../DynamicCLI'
+import { DynamicCLI } from '../DynamicCLI.ts'
 
 new DynamicCLI()
   .createPage('page1', 'Page 1', () => ['This is page 1'])
