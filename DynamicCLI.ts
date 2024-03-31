@@ -3,7 +3,7 @@ import wcwidth from 'wcwidth'
 
 // Dynamic CLI
 class DynamicCLI {
-  private _layout: any[] = [Component.pageTabs(), Component.blank(), Component.pageContent(), Component.blank(), Component.input()]
+  private _layout: any[] = [Components.pageTabs(), Components.blank(), Components.pageContent(), Components.blank(), Components.input()]
   private _style: Style = {
     background: BackgroundColor.reset,
 
@@ -24,8 +24,6 @@ class DynamicCLI {
   constructor (options?: DynamicCliOptions) {
     if (options === undefined) options = {}
 
-    if (options.render) this.interval = setInterval(() => console.log(process.stdout.write(`\x1B[2J\x1B[3J\x1B[H\x1Bc${this.render().join('\n')}\n${TextColor.reset}`)), options.renderInterval || 50)
-
     if (options.input) {
       this.interface = readline.createInterface({
         input: process.stdin,
@@ -33,13 +31,13 @@ class DynamicCLI {
       })
     }
 
-    if (options.render) {
+    if (options.render === undefined || options.render) {
       console.log('\u001B[?25l')
 
-      this.interval = setInterval(() => console.log(process.stdout.write(`\x1B[2J\x1B[3J\x1B[H\x1Bc${this.render().join('\n')}\n${TextColor.reset}`)), options.renderInterval || 50)
+      this.interval = setInterval(() => process.stdout.write(`\x1B[2J\x1B[3J\x1B[H\x1Bc${this.render().join('\n')}\n${TextColor.reset}`), options.renderInterval || 50)
     }
 
-    if (options.input) {
+    if (options.input === undefined || options.input) {
       this.interface = readline.createInterface({
         input: process.stdin,
         output: process.stdout
@@ -49,10 +47,10 @@ class DynamicCLI {
     }
   }
 
-  public get size () {return this._size}
-  public get pages () {return Object.keys(this._pages)}
-  public get input () {return this._data.input}
-  public get currentPage () {return this._data.currentPage}
+  public get size (): { width: undefined | number, height: undefined | number } {return this._size}
+  public get pages (): string[] {return Object.keys(this._pages)}
+  public get input (): string {return this._data.input}
+  public get currentPage (): undefined | string {return this._data.currentPage}
  
   // Stop
   public stop () {
@@ -329,13 +327,13 @@ class DynamicCLI {
   }
 }
 
-// Component 
-class Component {
-  public static blank () {return { type: 'blank' }}
-  public static text (callback: () => string) {return { type: 'text', callback }}
-  public static pageTabs () {return { type: 'pageTabs' }}
-  public static pageContent () {return { type: 'pageContent' }}
-  public static input (placeholder?: string) {return { type: 'input', placeholder }}
+// Components
+class Components {
+  public static blank (): Component {return { type: 'blank' }}
+  public static text (callback: () => string): Component {return { type: 'text', callback }}
+  public static pageTabs (): Component {return { type: 'pageTabs' }}
+  public static pageContent (): Component {return { type: 'pageContent' }}
+  public static input (placeholder?: string): Component {return { type: 'input', placeholder }}
 }
 
 // Text Color
@@ -398,6 +396,13 @@ interface DynamicCliOptions {
   renderInterval?: number,
 
   input?: true
+}
+
+// Component
+interface Component {
+  type: string,
+
+  [key: string]: any
 }
 
 // Style
