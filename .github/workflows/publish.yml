@@ -17,4 +17,5 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Publish Package
+        run: npm install
         run: npx jsr publish
