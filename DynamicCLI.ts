@@ -24,13 +24,6 @@ class DynamicCLI {
   constructor (options?: DynamicCliOptions) {
     if (options === undefined) options = {}
 
-    if (options.input) {
-      this.interface = readline.createInterface({
-        input: process.stdin,
-        output: process.stdout
-      })
-    }
-
     if (options.render === undefined || options.render) {
       console.log('\u001B[?25l')
 
@@ -290,7 +283,7 @@ class DynamicCLI {
           const pages = Object.keys(this._pages)
 
           if (pages.indexOf(this._data.currentPage) < 1) this._data.currentPage = pages[pages.length - 1]
-          else this._data.currentPage = pages[pages.indexOf(this._data.currentPage)-1]
+          else this._data.currentPage = pages[pages.indexOf(this._data.currentPage) - 1]
 
           this._callEvent('switchPage', this._data.currentPage)
         } else if (hex === keys.rightArrow) {
