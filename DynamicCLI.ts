@@ -388,7 +388,7 @@ interface DynamicCliOptions {
   render?: boolean,
   renderInterval?: number,
 
-  input?: true
+  input?: boolean
 }
 
 // Component
