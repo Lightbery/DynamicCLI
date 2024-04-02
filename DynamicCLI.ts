@@ -1,4 +1,5 @@
-import readline from 'readline'
+import readline from 'node:readline'
+import stream from 'node:stream'
 import wcwidth from 'wcwidth'
 
 // Dynamic CLI
@@ -27,16 +28,22 @@ class DynamicCLI {
     if (options.render === undefined || options.render) {
       console.log('\u001B[?25l')
 
-      this.interval = setInterval(() => process.stdout.write(`\x1B[2J\x1B[3J\x1B[H\x1Bc${this.render().join('\n')}\n${TextColor.reset}`), options.renderInterval || 50)
+      this.interval = setInterval(() => process.stdout.write(`\x1B[2J\x1B[3J\x1B[H\x1Bc${this.render().join('\n')}\n`), options.renderInterval || 50)
     }
 
     if (options.input === undefined || options.input) {
-      this.interface = readline.createInterface({
-        input: process.stdin,
-        output: process.stdout
+      const writableStream = new stream.Writable({
+        write: () => {}
       })
 
-      process.stdin.on('data', (data) => this._handleInput(data))
+      this.interface = readline.createInterface({
+        input: process.stdin,
+        output: writableStream,
+
+        terminal: true
+      })
+
+      process.stdin.on('data', (data) => this._handleInput(this.interface.line, data))
     }
   }
 
@@ -118,8 +125,8 @@ class DynamicCLI {
   }
 
   // Simulate Input
-  public simulateInput (data: Buffer): void {
-    this._handleInput(data)
+  public simulateInput (input: string, key: Buffer): void {
+    this._handleInput(input, key)
   }
 
   // Switch Page
@@ -259,8 +266,8 @@ class DynamicCLI {
   }
 
   // Handle Input
-  private _handleInput (data: Buffer): void {
-    const hex = data.toString('hex')
+  private _handleInput (input: string, key: Buffer): void {
+    const hex = key.toString('hex')
 
     if ([keys.upArrow, keys.downArrow, keys.leftArrow, keys.rightArrow].includes(hex)) {
       if (this._data.currentPage !== undefined) {
@@ -313,9 +320,11 @@ class DynamicCLI {
     } else {
       const regex = /^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/? ]*$/
 
-      if (regex.test(data.toString())) this._data.input+=data.toString().replaceAll('\n', '')
+      input = input.split('').filter((char) => regex.test(char)).join('')
 
-      this._callEvent('input', data)
+      this._data.input = input
+
+      this._callEvent('input', key)
     }
   }
 
