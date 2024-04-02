@@ -129,7 +129,12 @@ class DynamicCLI {
     this._data.currentPage = id
   }
 
-  // Listen To Event
+  public listen (name: 'scroll', callback: (info?: { page: string, cursorY: number, scrollY: number }) => any): void
+  public listen (name: 'switchPage', callback: (pageID?: string) => any): void
+  public listen (name: 'enter', callback: (input?: string) => any): void
+  public listen (name: 'input', callback: (key?: Buffer) => any): void
+
+  // Listen To An Event
   public listen (name: string, callback: (...args: any) => any): void {
     if (this._listeners[name] === undefined) this._listeners[name] = []
 
