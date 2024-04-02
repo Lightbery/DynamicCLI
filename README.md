@@ -107,9 +107,10 @@ new DynamicCLI(<options>) // Create a CLI
 
 ## simulateInput
 ```ts
-.simulateInput(<data>) // Simulate user input
+.simulateInput(<input>, <key>) // Simulate user input
 ```
-* `data <Buffer>` | The input you want to simulate.
+* `input <string>` | The full input.
+* `key <Buffer>` | The keystroke of the input.
 
 > `return <undefined>`
 
