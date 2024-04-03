@@ -4,6 +4,8 @@ import wcwidth from 'wcwidth'
 
 // Dynamic CLI
 class DynamicCLI {
+  private _options!: DynamicCliOptions
+
   private _layout: any[] = [Components.pageTabs(), Components.blank(), Components.pageContent(), Components.blank(), Components.input()]
   private _style: Style = {
     background: BackgroundColor.reset,
@@ -25,6 +27,8 @@ class DynamicCLI {
   constructor (options?: DynamicCliOptions) {
     if (options === undefined) options = {}
 
+    this._options = options
+
     if (options.render === undefined || options.render) {
       console.log('\u001B[?25l')
 
@@ -40,13 +44,15 @@ class DynamicCLI {
         input: process.stdin,
         output: writableStream,
 
-        terminal: true
+        terminal: true,
+        historySize: 0
       })
 
       process.stdin.on('data', (data) => this._handleInput(this.interface.line, data))
     }
   }
 
+  public get options (): DynamicCliOptions {return this._options}
   public get size (): { width: undefined | number, height: undefined | number } {return this._size}
   public get pages (): string[] {return Object.keys(this._pages)}
   public get input (): string {return this._data.input}
@@ -320,9 +326,7 @@ class DynamicCLI {
     } else {
       const regex = /^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/? ]*$/
 
-      input = input.split('').filter((char) => regex.test(char)).join('')
-
-      this._data.input = input
+      if (regex.test(key.toString())) this._data.input += key.toString()
 
       this._callEvent('input', key)
     }
