@@ -52,11 +52,11 @@ class DynamicCLI {
     }
   }
 
-  public get options (): DynamicCliOptions {return this._options}
-  public get size (): { width: undefined | number, height: undefined | number } {return this._size}
-  public get pages (): string[] {return Object.keys(this._pages)}
-  public get input (): string {return this._data.input}
-  public get currentPage (): undefined | string {return this._data.currentPage}
+  public get options () {return this._options}
+  public get size () {return this._size}
+  public get pages () {return Object.keys(this._pages)}
+  public get input () {return this._data.input}
+  public get currentPage () {return this._data.currentPage}
  
   // Stop
   public stop () {
