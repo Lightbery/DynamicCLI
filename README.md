@@ -14,7 +14,7 @@ new DynamicCLI()
 You can copy simply `DynamicCLI.ts` into your project or use [JSR to install](https://jsr.io/@lightbery/dynamic-cli).
 
 > [!Note]
-> DynamicCLI need `@types/wcwidth` and `wcwidth` as dependencies.
+> DynamicCLI need `@types/wcwidth` and `wcwidth` as its dependencies.
 
 ## Contents
 * [DynamicCLI](#dynamiccli)
