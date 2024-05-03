@@ -348,7 +348,7 @@ class Components {
 }
 
 // Text Color
-const TextColor: { [key: string]: string } = {
+const TextColor = {
   reset: '\x1b[0m',
 
   red: '\x1b[31m',
@@ -375,7 +375,7 @@ const TextColor: { [key: string]: string } = {
 }
 
 // Background Color
-const BackgroundColor: { [key: string]: string } = {
+const BackgroundColor = {
   reset: '\x1b[0m',
 
   red: '\x1b[41m',
