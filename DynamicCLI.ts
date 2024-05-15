@@ -48,15 +48,15 @@ class DynamicCLI {
         historySize: 0
       })
 
-      process.stdin.on('data', (data) => this._handleInput(this.interface.line, data))
+      process.stdin.on('data', (data) => this._handleInput(data))
     }
   }
 
-  public get options () {return this._options}
-  public get size () {return this._size}
-  public get pages () {return Object.keys(this._pages)}
-  public get input () {return this._data.input}
-  public get currentPage () {return this._data.currentPage}
+  public get options (): DynamicCliOptions {return this._options}
+  public get size (): { width: undefined | number, height: undefined | number } {return this._size}
+  public get pages (): string[] {return Object.keys(this._pages)}
+  public get input (): string {return this._data.input}
+  public get currentPage (): undefined | string {return this._data.currentPage}
  
   // Stop
   public stop () {
@@ -131,8 +131,8 @@ class DynamicCLI {
   }
 
   // Simulate Input
-  public simulateInput (input: string, key: Buffer): void {
-    this._handleInput(input, key)
+  public simulateInput (key: Buffer): void {
+    this._handleInput(key)
   }
 
   // Switch Page
@@ -142,10 +142,10 @@ class DynamicCLI {
     this._data.currentPage = id
   }
 
-  public listen (name: 'scroll', callback: (info?: { page: string, cursorY: number, scrollY: number }) => any): void
-  public listen (name: 'switchPage', callback: (pageID?: string) => any): void
-  public listen (name: 'enter', callback: (input?: string) => any): void
-  public listen (name: 'input', callback: (key?: Buffer) => any): void
+  public listen (name: 'scroll', callback: (info: { page: string, cursorY: number, scrollY: number }) => any): void
+  public listen (name: 'switchPage', callback: (pageID: string) => any): void
+  public listen (name: 'enter', callback: (input: string) => any): void
+  public listen (name: 'input', callback: (key: Buffer) => any): void
 
   // Listen To An Event
   public listen (name: string, callback: (...args: any) => any): void {
@@ -272,7 +272,7 @@ class DynamicCLI {
   }
 
   // Handle Input
-  private _handleInput (input: string, key: Buffer): void {
+  private _handleInput (key: Buffer): void {
     const hex = key.toString('hex')
 
     if ([keys.upArrow, keys.downArrow, keys.leftArrow, keys.rightArrow].includes(hex)) {
@@ -348,7 +348,7 @@ class Components {
 }
 
 // Text Color
-const TextColor = {
+const TextColor: { [key: string]: string } = {
   reset: '\x1b[0m',
 
   red: '\x1b[31m',
@@ -375,7 +375,7 @@ const TextColor = {
 }
 
 // Background Color
-const BackgroundColor = {
+const BackgroundColor: { [key: string]: string } = {
   reset: '\x1b[0m',
 
   red: '\x1b[41m',
