@@ -53,7 +53,7 @@ class DynamicCLI {
         historySize: 0
       })
 
-      process.stdin.on('data', (data) => this._handleInput(this.interface.line, data))
+      process.stdin.on('data', (data) => this._handleInput(data))
     }
   }
 
@@ -134,8 +134,8 @@ class DynamicCLI {
   }
 
   // Simulate Input
-  public simulateInput (input: string, key: Buffer): void {
-    this._handleInput(input, key)
+  public simulateInput (key: Buffer): void {
+    this._handleInput(key)
   }
 
   // Switch Page
@@ -281,7 +281,7 @@ class DynamicCLI {
   }
 
   // Handle Input
-  private _handleInput (input: string, key: Buffer): void {
+  private _handleInput (key: Buffer): void {
     const hex = key.toString('hex')
 
     if ([keys.upArrow, keys.downArrow, keys.leftArrow, keys.rightArrow].includes(hex)) {
