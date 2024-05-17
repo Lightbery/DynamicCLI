@@ -24,15 +24,20 @@ class DynamicCLI {
   private _data: { input: string, currentPage: undefined | string } = { input: '', currentPage: undefined }
   private _listeners: { [key: string]: { (...args: any): any }[] } = {}
 
+  private _oldRenderContent: string[] = []
+
   constructor (options?: DynamicCliOptions) {
     if (options === undefined) options = {}
 
     this._options = options
 
     if (options.render === undefined || options.render) {
-      console.log('\u001B[?25l')
+      process.stdout.write(`\u001B[?25l${`\n`.repeat(process.stdout.rows)}`)
 
-      this.interval = setInterval(() => process.stdout.write(`\x1B[2J\x1B[3J\x1B[H\x1Bc${this.render().join('\n')}\n`), options.renderInterval || 50)
+      this.interval = setInterval(
+        () => process.stdout.write(this.render().map((change) => `\x1B[H${(change.line > 0) ? `\x1B[${change.line}B` : ''}\x1B[2K${change.content}`).join('')),
+        options.renderInterval || 25
+      )
     }
 
     if (options.input === undefined || options.input) {
@@ -48,15 +53,15 @@ class DynamicCLI {
         historySize: 0
       })
 
-      process.stdin.on('data', (data) => this._handleInput(data))
+      process.stdin.on('data', (data) => this._handleInput(this.interface.line, data))
     }
   }
 
-  public get options (): DynamicCliOptions {return this._options}
-  public get size (): { width: undefined | number, height: undefined | number } {return this._size}
-  public get pages (): string[] {return Object.keys(this._pages)}
-  public get input (): string {return this._data.input}
-  public get currentPage (): undefined | string {return this._data.currentPage}
+  public get options () {return this._options}
+  public get size () {return this._size}
+  public get pages () {return Object.keys(this._pages)}
+  public get input () {return this._data.input}
+  public get currentPage () {return this._data.currentPage}
  
   // Stop
   public stop () {
@@ -65,8 +70,6 @@ class DynamicCLI {
     clearInterval(this.interval)
 
     this.interval = undefined
-
-    console.log('\u001B[?25h')
   }
 
   // Set Size
@@ -131,8 +134,8 @@ class DynamicCLI {
   }
 
   // Simulate Input
-  public simulateInput (key: Buffer): void {
-    this._handleInput(key)
+  public simulateInput (input: string, key: Buffer): void {
+    this._handleInput(input, key)
   }
 
   // Switch Page
@@ -142,10 +145,10 @@ class DynamicCLI {
     this._data.currentPage = id
   }
 
-  public listen (name: 'scroll', callback: (info: { page: string, cursorY: number, scrollY: number }) => any): void
-  public listen (name: 'switchPage', callback: (pageID: string) => any): void
-  public listen (name: 'enter', callback: (input: string) => any): void
-  public listen (name: 'input', callback: (key: Buffer) => any): void
+  public listen (name: 'scroll', callback: (info?: { page: string, cursorY: number, scrollY: number }) => any): void
+  public listen (name: 'switchPage', callback: (pageID?: string) => any): void
+  public listen (name: 'enter', callback: (input?: string) => any): void
+  public listen (name: 'input', callback: (key?: Buffer) => any): void
 
   // Listen To An Event
   public listen (name: string, callback: (...args: any) => any): void {
@@ -155,7 +158,7 @@ class DynamicCLI {
   }
 
   // Render
-  public render (): string[] {
+  public render (): { line: number, content: string }[] {
     let lines: any[] = []
 
     this._layout.forEach((component) => lines = lines.concat(this._renderComponent(component)))
@@ -164,7 +167,9 @@ class DynamicCLI {
 
     while (lines.length < size.height - 1) lines.push('')
 
-    lines = lines.slice(0, size.height - 1).map((line) => {
+    const changes: { line: number, content: string }[] = []
+
+    this._oldRenderContent = lines.slice(0, size.height - 1).map((line, index) => {
       let characters = this._sperateColor(line.replaceAll('\n', '\\n'))
       let planText = characters.map((character) => character.text).join('')
 
@@ -176,10 +181,14 @@ class DynamicCLI {
         }
       }
 
-      return `${this._style.background}${characters.map((character) => `${(character.color === undefined) ? '' : character.color}${character.text}`).join('')}`
+      const string = `${this._style.background}${characters.map((character) => `${(character.color === undefined) ? '' : character.color}${character.text}`).join('')}`
+
+      if (string !== this._oldRenderContent[index]) changes.push({ line: index, content: string })
+
+      return string
     })
 
-    return lines
+    return changes 
   }
 
   // Render Component
@@ -272,7 +281,7 @@ class DynamicCLI {
   }
 
   // Handle Input
-  private _handleInput (key: Buffer): void {
+  private _handleInput (input: string, key: Buffer): void {
     const hex = key.toString('hex')
 
     if ([keys.upArrow, keys.downArrow, keys.leftArrow, keys.rightArrow].includes(hex)) {
