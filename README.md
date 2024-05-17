@@ -28,6 +28,7 @@ You can copy simply `DynamicCLI.ts` into your project or use [JSR to install](ht
   * [simulateInput()](#simulateinput)
   * [switchPage()](#switchpage)
   * [listen()](#listen)
+  * [render()](#render)
 * [Component](#component)
 * [TextColor](#textcolor)
 * [BackgroundColor](#backgroundcolor)
@@ -100,7 +101,7 @@ new DynamicCLI(<options>) // Create a CLI
 
 > `return <DynamicCLI>`
 
-## setInput
+## setInput()
 ```ts
 .setInput(<string>) // Set the input
 ```
@@ -108,7 +109,7 @@ new DynamicCLI(<options>) // Create a CLI
 
 > `return <undefined>`
 
-## simulateInput
+## simulateInput()
 ```ts
 .simulateInput(<input>, <key>) // Simulate user input
 ```
@@ -117,7 +118,7 @@ new DynamicCLI(<options>) // Create a CLI
 
 > `return <undefined>`
 
-## switchPage
+## switchPage()
 ```ts
 .switchPage(<id>) // Switch page
 ```
@@ -125,7 +126,7 @@ new DynamicCLI(<options>) // Create a CLI
 
 > `return <undefined>`
 
-## listen
+## listen()
 ```ts
 .listen(<name>, <callback>) // Listen to an event
 ```
@@ -141,6 +142,13 @@ new DynamicCLI(<options>) // Create a CLI
 | input      | (key)                        | Triggered when user input.          |
 
 > `return <undefined>`
+
+## render()
+```ts
+.render() // Render the CLI
+```
+
+> `return <{ line: number, content: string }[]>`
 
 # Component
 ```ts
