@@ -41,7 +41,7 @@ new DynamicCLI(<options>) // Create a CLI
 ```
 * `options <undefined | object>` | Options for the CLI.
   * `render <boolean>` | Should the CLI render stuff onto the console. `Default: true`
-  * `renderInterval <number>` | The interval(ms) between each render. `Default: 50`
+  * `renderInterval <number>` | The interval(ms) between each render. `Default: 25`
 
 ## Getters
  * `.pages <string[]>` | Get IDs of all the pages.
@@ -52,8 +52,7 @@ new DynamicCLI(<options>) // Create a CLI
 ```ts
 .stop() // Stop the CLI
 ```
-
-> `return <undefined>`
+> `return <void>`
 
 ## setLayout()
 ```ts
@@ -107,16 +106,15 @@ new DynamicCLI(<options>) // Create a CLI
 ```
 * `string <string>` | The content of the input.
 
-> `return <undefined>`
+> `return <void>`
 
 ## simulateInput()
 ```ts
-.simulateInput(<input>, <key>) // Simulate user input
+.simulateInput(<key>) // Simulate user input
 ```
-* `input <string>` | The full input.
 * `key <Buffer>` | The keystroke of the input.
 
-> `return <undefined>`
+> `return <void>`
 
 ## switchPage()
 ```ts
@@ -124,7 +122,7 @@ new DynamicCLI(<options>) // Create a CLI
 ```
 * `id <string>` | The id of the page.
 
-> `return <undefined>`
+> `return <void>`
 
 ## listen()
 ```ts
@@ -134,20 +132,19 @@ new DynamicCLI(<options>) // Create a CLI
 * `callback <function>` | The function that triggers when the event is called.
 
 **- All Events -**
-| name       | callback data                | description                         |
-| ---        | ---                          | ---                                 |
-| scroll     | ({ page, cursorY, scrollY }) | Triggered when user scrolls.        |
-| switchPage | (pageID)                     | Triggered when user switches pages. |
-| enter      | (input)                      | Triggered when user press enter.    |
-| input      | (key)                        | Triggered when user input.          |
+| name       | callback arguments                 | description                             |
+| ---        | ---                                | ---                                     |
+| scroll     | (info: { page, cursorY, scrollY }) | Triggeres when the user scrolls.        |
+| switchPage | (pageID: string)                   | Triggeres when the user switches pages. |
+| enter      | (input: string)                    | Triggeres when the user press enter.    |
+| input      | (key: Buffer)                      | Triggeres when the user input.          |
 
-> `return <undefined>`
+> `return <void>`
 
 ## render()
 ```ts
 .render() // Render the CLI
 ```
-
 > `return <{ line: number, content: string }[]>`
 
 # Component
