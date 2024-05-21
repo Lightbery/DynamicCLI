@@ -52,8 +52,7 @@ new DynamicCLI(<options>) // Create a CLI
 ```ts
 .stop() // Stop the CLI
 ```
-
-> `return <undefined>`
+> `return <void>`
 
 ## setLayout()
 ```ts
@@ -107,16 +106,15 @@ new DynamicCLI(<options>) // Create a CLI
 ```
 * `string <string>` | The content of the input.
 
-> `return <undefined>`
+> `return <void>`
 
 ## simulateInput()
 ```ts
-.simulateInput(<input>, <key>) // Simulate user input
+.simulateInput(<key>) // Simulate user input
 ```
-* `input <string>` | The full input.
 * `key <Buffer>` | The keystroke of the input.
 
-> `return <undefined>`
+> `return <void>`
 
 ## switchPage()
 ```ts
@@ -124,7 +122,7 @@ new DynamicCLI(<options>) // Create a CLI
 ```
 * `id <string>` | The id of the page.
 
-> `return <undefined>`
+> `return <void>`
 
 ## listen()
 ```ts
@@ -141,13 +139,12 @@ new DynamicCLI(<options>) // Create a CLI
 | enter      | (input)                      | Triggered when user press enter.    |
 | input      | (key)                        | Triggered when user input.          |
 
-> `return <undefined>`
+> `return <void>`
 
 ## render()
 ```ts
 .render() // Render the CLI
 ```
-
 > `return <{ line: number, content: string }[]>`
 
 # Component
