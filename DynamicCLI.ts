@@ -22,7 +22,7 @@ class DynamicCLI {
   private _size: { width: undefined | number, height: undefined | number } = { width: undefined, height: undefined }
   private _pages: { [key: string]: Page } = {}
   private _data: { input: string, currentPage: undefined | string } = { input: '', currentPage: undefined }
-  private _listeners: { [key: string]: { (...args: any): any }[] } = {}
+  private _listeners: { [key: string]: Listener } = {}
 
   private _oldRenderContent: string[] = []
 
@@ -146,14 +146,28 @@ class DynamicCLI {
   }
 
   // Listen To An Event
-  public listen (name: 'scroll', callback: (info: { page: string, cursorY: number, scrollY: number }) => any): void
-  public listen (name: 'switchPage', callback: (pageID: string) => any): void
-  public listen (name: 'enter', callback: (input: string) => any): void
-  public listen (name: 'input', callback: (key: Buffer) => any): void
-  public listen (name: string, callback: (...args: any) => any): void {
-    if (this._listeners[name] === undefined) this._listeners[name] = []
+  public listen (type: 'scroll', callback: (info: { page: string, cursorY: number, scrollY: number }) => any): void
+  public listen (type: 'switchPage', callback: (pageID: string) => any): void
+  public listen (type: 'enter', callback: (input: string) => any): void
+  public listen (type: 'input', callback: (key: Buffer) => any): void
+  public listen (type: string, callback: (...args: any) => any): string {
+    const id = generateID(5, Object.keys(this._listeners))
 
-    this._listeners[name].push(callback)
+    this._listeners[id] = { type, callback }
+
+    return id
+  }
+
+  // Remove A Listener
+  public removeListener (id: string): void {
+    if (this._listeners[id] === undefined) throw new Error(`Listener Not Found: "${id}"`)
+
+    delete this._listeners[id]
+  }
+
+  // Remove All Listeners
+  public removeAllListeners (): void {
+    this._listeners = {}
   }
 
   // Render
@@ -341,8 +355,10 @@ class DynamicCLI {
   }
 
   // Call Event
-  private _callEvent (name: string, data: any): void {
-    if (this._listeners[name] !== undefined) this._listeners[name].forEach((callback) => callback(data))
+  private _callEvent (type: string, data: any): void {
+    Object.keys(this._listeners).forEach((id) => {
+      if (this._listeners[id].type === type) this._listeners[id].callback(data)
+    })
   }
 }
 
@@ -353,6 +369,29 @@ class Components {
   public static pageTabs (): Component {return { type: 'pageTabs' }}
   public static pageContent (): Component {return { type: 'pageContent' }}
   public static input (placeholder?: string): Component {return { type: 'input', placeholder }}
+}
+
+// Generate ID
+function generateID (length: number, keys: string[]): string {
+  let id = generateAnID(length)
+
+  while (keys.includes(id)) id = generateAnID(length)
+
+  return id
+}
+
+// Generate An ID
+function generateAnID (length: number): string {
+  let string: string = ''
+
+  for (let i = 0; i < length; i++) string += letters[getRandom(0, letters.length - 1)]
+
+  return string
+}
+
+// Get A Random Number
+function getRandom (min: number, max: number): number {
+  return Math.floor(Math.random() * max) + min 
 }
 
 // Text Color
@@ -445,6 +484,13 @@ interface Page {
   scrollY: number
 }
 
+// Listener
+interface Listener {
+  type: string,
+
+  callback: (...args: any) => any
+}
+
 export { DynamicCLI, Component, TextColor, BackgroundColor }
 
 const keys: { [key: string]: string } = {
@@ -457,3 +503,5 @@ const keys: { [key: string]: string } = {
   backspace: '7f',
   exit: '03'
 }
+
+const letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789'
