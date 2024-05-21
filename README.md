@@ -41,7 +41,7 @@ new DynamicCLI(<options>) // Create a CLI
 ```
 * `options <undefined | object>` | Options for the CLI.
   * `render <boolean>` | Should the CLI render stuff onto the console. `Default: true`
-  * `renderInterval <number>` | The interval(ms) between each render. `Default: 50`
+  * `renderInterval <number>` | The interval(ms) between each render. `Default: 25`
 
 ## Getters
  * `.pages <string[]>` | Get IDs of all the pages.
