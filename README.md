@@ -132,12 +132,12 @@ new DynamicCLI(<options>) // Create a CLI
 * `callback <function>` | The function that triggers when the event is called.
 
 **- All Events -**
-| name       | callback data                | description                         |
-| ---        | ---                          | ---                                 |
-| scroll     | ({ page, cursorY, scrollY }) | Triggered when user scrolls.        |
-| switchPage | (pageID)                     | Triggered when user switches pages. |
-| enter      | (input)                      | Triggered when user press enter.    |
-| input      | (key)                        | Triggered when user input.          |
+| name       | callback arguments                 | description                             |
+| ---        | ---                                | ---                                     |
+| scroll     | (info: { page, cursorY, scrollY }) | Triggeres when the user scrolls.        |
+| switchPage | (pageID: string)                   | Triggeres when the user switches pages. |
+| enter      | (input: string)                    | Triggeres when the user press enter.    |
+| input      | (key: Buffer)                      | Triggeres when the user input.          |
 
 > `return <void>`
 
