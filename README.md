@@ -20,6 +20,7 @@ You can copy simply `DynamicCLI.ts` into your project or use [JSR to install](ht
 * [DynamicCLI](#dynamiccli)
   * [Getters](#getters)
   * [stop()](#stop)
+  * [setSize()](#setsize)
   * [setLayout()](#setlayout)
   * [setStyle()](#setstyle)
   * [createPage()](#createpage)
@@ -50,11 +51,20 @@ new DynamicCLI(<options>) // Create a CLI
  * `.input <string>` | Get user input.
  * `.currentPage <string>` | Get the ID of current page.
 
-## Stop()
+## stop()
 ```ts
 .stop() // Stop the CLI
 ```
 > `return <void>`
+
+## setSize()
+```ts
+.setSize(<width>, <height>) // Set the size of the CLI
+```
+* `width <undefined | number>` | The width.
+* `height <undefined | number>` | The height.
+
+> `return <DynamicCLI>`
 
 ## setLayout()
 ```ts
@@ -120,7 +130,7 @@ new DynamicCLI(<options>) // Create a CLI
 
 ## switchPage()
 ```ts
-.switchPage(<id>) // Switch page
+.switchPage(<id>) // Switch the page
 ```
 * `id <string>` | The id of the page.
 

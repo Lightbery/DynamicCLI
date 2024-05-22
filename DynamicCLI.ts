@@ -2,7 +2,7 @@ import readline from 'node:readline'
 import stream from 'node:stream'
 import wcwidth from 'wcwidth'
 
-// Dynamic CLI
+/** The DynamicCLI itself */
 class DynamicCLI {
   private _options!: DynamicCliOptions
 
@@ -63,7 +63,7 @@ class DynamicCLI {
   public get input (): string {return this._data.input}
   public get currentPage (): undefined | string {return this._data.currentPage}
  
-  // Stop
+  /** Stop the CLI */
   public stop () {
     if (this.interval === undefined) throw new Error('Cannot Stop The CLI')
 
@@ -72,28 +72,28 @@ class DynamicCLI {
     this.interval = undefined
   }
 
-  // Set Size
+  /** Set the size of the CLI  */
   public setSize (width: undefined | number, height: undefined | number): DynamicCLI {
     this._size = { width, height }
 
     return this
   }
 
-  // Set Layout
+  /** Set the layout of the CLI */
   public setLayout (layout: { type: 'blank' | 'text' | 'pageTabs' | 'pageContent' | 'input', [key: string]: any }[]): DynamicCLI {
     this._layout = layout
 
     return this
   }
 
-  // Set Style
+  /** Set the style of the CLI */
   public setStyle (style: Style): DynamicCLI {
     this._style = style
 
     return this
   }
 
-  // Create Page
+  /** Create a page */
   public createPage (id: string, name: string, callback: () => string[]): DynamicCLI {
     if (this._pages[id] !== undefined) throw new Error(`Page Already Exist: "${id}"`)
 
@@ -112,7 +112,7 @@ class DynamicCLI {
     return this
   }
 
-  // Delete Page
+  /** Delete a page */
   public deletePage (id: string): void {
     if (this._pages[id] === undefined) throw new Error(`Page Not Found: "${id}"`)
 
@@ -128,24 +128,24 @@ class DynamicCLI {
     } else delete this._pages[id]
   }
 
-  // Set Input
+  /** Set the input */
   public setInput (string: string): void {
     this._data.input = string
   }
 
-  // Simulate Input
+  /** Simulate user input */
   public simulateInput (key: Buffer): void {
     this._handleInput(key)
   }
 
-  // Switch Page
+  /** Switch the page */
   public switchPage (id: string): void {
     if (this._pages[id] === undefined) throw new Error(`Page Not Found: "${id}"`)
 
     this._data.currentPage = id
   }
 
-  // Listen To An Event
+  /** Listen to an event */
   public listen (type: 'scroll', callback: (info: { page: string, cursorY: number, scrollY: number }) => any): void
   public listen (type: 'switchPage', callback: (pageID: string) => any): void
   public listen (type: 'enter', callback: (input: string) => any): void
@@ -158,19 +158,19 @@ class DynamicCLI {
     return id
   }
 
-  // Remove A Listener
+  /** Remove a listener */
   public removeListener (id: string): void {
     if (this._listeners[id] === undefined) throw new Error(`Listener Not Found: "${id}"`)
 
     delete this._listeners[id]
   }
 
-  // Remove All Listeners
+  /** Remove all listeners */
   public removeAllListeners (): void {
     this._listeners = {}
   }
 
-  // Render
+  /** Render the CLI */
   public render (): { line: number, content: string }[] {
     let lines: any[] = []
 
@@ -204,7 +204,7 @@ class DynamicCLI {
     return changes 
   }
 
-  // Render Component
+  /** Render a component */
   private _renderComponent (component: any): string[] {
     if (component.type === 'blank') return [this._style.background]
     else if (component.type === 'text') return [component.callback()]
@@ -257,12 +257,12 @@ class DynamicCLI {
     return []
   }
 
-  // Get Size
+  /** Get the size of the CLI */
   private _getSize (): { width: number, height: number } {
     return { width: this._size.width || process.stdout.columns, height: this._size.height || process.stdout.rows }
   }
 
-  // Seperate Color
+  /** Seperate the color from the text */
   private _sperateColor (string: string): { color?: string, text: string }[] {
     const characters: { color?: string, text: string }[] = []
 
@@ -293,7 +293,7 @@ class DynamicCLI {
     return characters
   }
 
-  // Handle Input
+  /** Handle user input */
   private _handleInput (key: Buffer): void {
     const hex = key.toString('hex')
 
@@ -354,7 +354,7 @@ class DynamicCLI {
     }
   }
 
-  // Call Event
+  /** Call an event */
   private _callEvent (type: string, data: any): void {
     Object.keys(this._listeners).forEach((id) => {
       if (this._listeners[id].type === type) this._listeners[id].callback(data)
@@ -362,7 +362,7 @@ class DynamicCLI {
   }
 }
 
-// Components
+/** All available components */
 class Components {
   public static blank (): Component {return { type: 'blank' }}
   public static text (callback: () => string): Component {return { type: 'text', callback }}
@@ -371,7 +371,7 @@ class Components {
   public static input (placeholder?: string): Component {return { type: 'input', placeholder }}
 }
 
-// Generate ID
+/** Generate ID*/
 function generateID (length: number, keys: string[]): string {
   let id = generateAnID(length)
 
@@ -380,7 +380,7 @@ function generateID (length: number, keys: string[]): string {
   return id
 }
 
-// Generate An ID
+/** Generate an ID */
 function generateAnID (length: number): string {
   let string: string = ''
 
@@ -389,12 +389,12 @@ function generateAnID (length: number): string {
   return string
 }
 
-// Get A Random Number
+/** Get a random number */
 function getRandom (min: number, max: number): number {
   return Math.floor(Math.random() * max) + min 
 }
 
-// Text Color
+/** All available text colors */
 const TextColor: { [key: string]: string } = {
   reset: '\x1b[0m',
 
@@ -421,7 +421,7 @@ const TextColor: { [key: string]: string } = {
   gray: '\x1b[90m'
 }
 
-// Background Color
+/** All available background colors */
 const BackgroundColor: { [key: string]: string } = {
   reset: '\x1b[0m',
 
@@ -448,7 +448,7 @@ const BackgroundColor: { [key: string]: string } = {
   gray: '\x1b[100m'
 }
 
-// DynamicCliOptions
+/** Options for DynamicCLI */
 interface DynamicCliOptions {
   render?: boolean,
   renderInterval?: number,
@@ -456,14 +456,14 @@ interface DynamicCliOptions {
   input?: boolean
 }
 
-// Component
+/** A component */
 interface Component {
   type: string,
 
   [key: string]: any
 }
 
-// Style
+/** Style for DynamicCLI */
 interface Style {
   background: string,
 
@@ -473,7 +473,7 @@ interface Style {
   notSelectFont: string 
 }
 
-// Page
+/** A page */
 interface Page {
   name: string,
   callback: () => string[],
@@ -484,7 +484,7 @@ interface Page {
   scrollY: number
 }
 
-// Listener
+/** A listener */
 interface Listener {
   type: string,
 
