@@ -28,6 +28,8 @@ You can copy simply `DynamicCLI.ts` into your project or use [JSR to install](ht
   * [simulateInput()](#simulateinput)
   * [switchPage()](#switchpage)
   * [listen()](#listen)
+  * [removeListener()](#removelistener)
+  * [removeAllListeners()](#removealllisteners)
   * [render()](#render)
 * [Component](#component)
 * [TextColor](#textcolor)
@@ -138,6 +140,21 @@ new DynamicCLI(<options>) // Create a CLI
 | switchPage | (pageID: string)                   | Triggeres when the user switches pages. |
 | enter      | (input: string)                    | Triggeres when the user press enter.    |
 | input      | (key: Buffer)                      | Triggeres when the user input.          |
+
+> `return <string>` (The ID of the listener)
+
+## removeListener()
+```ts
+.removeListener(<id>) // Remove a listener
+```
+* `id <string>` | The ID of the listener.
+
+> `return <void>`
+
+## removeAllListeners()
+```ts
+.removeAllListeners() // Remove all listeners
+```
 
 > `return <void>`
 
