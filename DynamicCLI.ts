@@ -17,7 +17,7 @@ class DynamicCLI {
   }
 
   public interval!: any
-  public interface!: readline.Interface
+  public interface!: undefined | readline.Interface
 
   private _size: { width: undefined | number, height: undefined | number } = { width: undefined, height: undefined }
   private _pages: { [key: string]: Page } = {}
@@ -68,6 +68,14 @@ class DynamicCLI {
     if (this.interval === undefined) throw new Error('Cannot Stop The CLI')
 
     clearInterval(this.interval)
+
+    if (this.interface !== undefined) {
+      this.interface.close()
+
+      process.stdin.off('data', this._handleInput)
+
+      this.interface = undefined
+    }
 
     this.interval = undefined
 
