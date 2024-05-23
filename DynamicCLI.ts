@@ -70,6 +70,8 @@ class DynamicCLI {
     clearInterval(this.interval)
 
     this.interval = undefined
+
+    process.stdout.write(`\u001B[?25h`)
   }
 
   /** Set the size of the CLI  */
