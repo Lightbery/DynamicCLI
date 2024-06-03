@@ -319,7 +319,7 @@ class DynamicCLI {
           }
 
           this._callEvent('scroll', { page: this._data.currentPage, cursorY: page.cursorY, scrollY: page.scrollY })
-        } else if (keys.arrowDown.includes(hex)) {
+        } else if (keys.downArrow.includes(hex)) {
           const size = this._getSize()
 
           if (page.cursorY - page.scrollY < (size.height - this._layout.length) - 1 && page.cursorY < page.content.length - 1) page.cursorY++
