@@ -307,11 +307,11 @@ class DynamicCLI {
   private _handleInput (key: Buffer): void {
     const hex = key.toString('hex')
 
-    if ([keys.upArrow, keys.downArrow, keys.leftArrow, keys.rightArrow].includes(hex)) {
+    if ([...keys.upArrow, ...keys.downArrow, ...keys.leftArrow, ...keys.rightArrow].includes(hex)) {
       if (this._data.currentPage !== undefined) {
         const page = this._pages[this._data.currentPage]
 
-        if (hex === keys.upArrow) {
+        if (keys.upArrow.includes(hex)) {
           if (page.cursorY > page.scrollY) page.cursorY--
           else if (page.scrollY > 0) {
             page.cursorY--
@@ -319,7 +319,7 @@ class DynamicCLI {
           }
 
           this._callEvent('scroll', { page: this._data.currentPage, cursorY: page.cursorY, scrollY: page.scrollY })
-        } else if (hex === keys.downArrow) {
+        } else if (keys.arrowDown.includes(hex)) {
           const size = this._getSize()
 
           if (page.cursorY - page.scrollY < (size.height - this._layout.length) - 1 && page.cursorY < page.content.length - 1) page.cursorY++
@@ -329,14 +329,14 @@ class DynamicCLI {
           }
 
           this._callEvent('scroll', { page: this._data.currentPage, cursorY: page.cursorY, scrollY: page.scrollY })
-        } else if (hex === keys.leftArrow) {
+        } else if (keys.arrowLeft.includes(hex)) {
           const pages = Object.keys(this._pages)
 
           if (pages.indexOf(this._data.currentPage) < 1) this._data.currentPage = pages[pages.length - 1]
           else this._data.currentPage = pages[pages.indexOf(this._data.currentPage) - 1]
 
           this._callEvent('switchPage', this._data.currentPage)
-        } else if (hex === keys.rightArrow) {
+        } else if (keys.rightArrow.includes(hex)) {
           const pages = Object.keys(this._pages)
 
           if (pages.indexOf(this._data.currentPage) > pages.length - 2) this._data.currentPage = pages[0]
@@ -345,13 +345,13 @@ class DynamicCLI {
           this._callEvent('switchPage', this._data.currentPage)
         }
       }
-    } else if (hex === keys.enter) {
+    } else if (keys.enter.includes(hex)) {
       if (this._data.input.length > 0) {
         this._callEvent('enter', this._data.input)
 
         this._data.input = ''
       } else if (this._data.currentPage !== undefined) this._callEvent('select', { page: this._data.currentPage, cursorY: this._pages[this._data.currentPage].cursorY })
-    } else if (hex === keys.backspace) {
+    } else if (keys.backspace.includes(hex)) {
       if (this._data.input.length > 0) this._data.input = this._data.input.substring(0, this._data.input.length - 1)
 
       this._callEvent('input', this._data.input)
@@ -503,15 +503,14 @@ interface Listener {
 
 export { DynamicCLI, Component, TextColor, BackgroundColor }
 
-const keys: { [key: string]: string } = {
-  upArrow: '1b5b41',
-  downArrow: '1b5b42',
-  leftArrow: '1b5b44',
-  rightArrow: '1b5b43',
+const keys: { [key: string]: string[] } = {
+  upArrow: ['1b5b41'],
+  downArrow: ['1b5b42'],
+  leftArrow: ['1b5b44'],
+  rightArrow: ['1b5b43'],
 
-  enter: '0d',
-  backspace: '7f',
-  exit: '03'
+  enter: ['0d'],
+  backspace: ['7f', '08'],
 }
 
 const letters: string = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789'
