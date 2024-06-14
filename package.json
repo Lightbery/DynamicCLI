@@ -1,6 +1,14 @@
 {
+  "scripts": {
+    "start": "tsx Scripts/Test/Main.ts"
+  },
+
   "dependencies": {
     "@types/wcwidth": "^1.0.2",
     "wcwidth": "^1.0.1"
+  },
+
+  "devDependencies": {
+    "tsx": "^4.15.4"
   }
 }

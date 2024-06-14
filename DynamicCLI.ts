@@ -329,7 +329,7 @@ class DynamicCLI {
           }
 
           this._callEvent('scroll', { page: this._data.currentPage, cursorY: page.cursorY, scrollY: page.scrollY })
-        } else if (keys.arrowLeft.includes(hex)) {
+        } else if (keys.leftArrow.includes(hex)) {
           const pages = Object.keys(this._pages)
 
           if (pages.indexOf(this._data.currentPage) < 1) this._data.currentPage = pages[pages.length - 1]
