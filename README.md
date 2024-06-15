@@ -45,12 +45,14 @@ new DynamicCLI(<options>) // Create a CLI
 * `options <undefined | object>` | Options for the CLI.
   * `render <boolean>` | Should the CLI render stuff onto the console. `Default: true`
   * `renderInterval <number>` | The interval(ms) between each render. `Default: 25`
-  * `input <boolean>` | Should the CLI take input from stdin. `Default: true`
+  * `allowInput <boolean>` | Should the CLI take input from stdin. `Default: true`
+  * `allowSwitchPage <boolean>` | Whether the user is allowed to switch pages. `Default: true`
 
 ## Getters
  * `.pages <string[]>` | Get IDs of all the pages.
  * `.input <string>` | Get user input.
- * `.currentPage <string>` | Get the ID of current page.
+ * `.currentPage <undefined | string>` | Get the ID of current page.
+ * `.cursorY <undefined | number>` | The y position of the cursor.
 
 ## stop()
 ```ts

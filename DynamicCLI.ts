@@ -40,7 +40,7 @@ class DynamicCLI {
       )
     }
 
-    if (options.input === undefined || options.input) {
+    if (options.allowInput === undefined || options.allowInput) {
       const writableStream = new stream.Writable({
         write: () => {}
       })
@@ -62,6 +62,12 @@ class DynamicCLI {
   public get pages (): string[] {return Object.keys(this._pages)}
   public get input (): string {return this._data.input}
   public get currentPage (): undefined | string {return this._data.currentPage}
+  public get cursorY (): undefined | number {
+    const page = this._pages[this._data.currentPage as any]
+
+    if (page === undefined) return undefined
+    else page.cursorY
+  }
  
   /** Stop the CLI */
   public stop () {
@@ -329,14 +335,14 @@ class DynamicCLI {
           }
 
           this._callEvent('scroll', { page: this._data.currentPage, cursorY: page.cursorY, scrollY: page.scrollY })
-        } else if (keys.leftArrow.includes(hex)) {
+        } else if (keys.leftArrow.includes(hex) && (this._options.allowSwitchPage === undefined || this._options.allowSwitchPage === true)) {
           const pages = Object.keys(this._pages)
 
           if (pages.indexOf(this._data.currentPage) < 1) this._data.currentPage = pages[pages.length - 1]
           else this._data.currentPage = pages[pages.indexOf(this._data.currentPage) - 1]
 
           this._callEvent('switchPage', this._data.currentPage)
-        } else if (keys.rightArrow.includes(hex)) {
+        } else if (keys.rightArrow.includes(hex) && (this._options.allowSwitchPage === undefined || this._options.allowSwitchPage === true)) {
           const pages = Object.keys(this._pages)
 
           if (pages.indexOf(this._data.currentPage) > pages.length - 2) this._data.currentPage = pages[0]
@@ -463,7 +469,8 @@ interface DynamicCliOptions {
   render?: boolean,
   renderInterval?: number,
 
-  input?: boolean
+  allowInput?: boolean,
+  allowSwitchPage?: boolean
 }
 
 /** A component */
