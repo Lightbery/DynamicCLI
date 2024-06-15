@@ -378,7 +378,7 @@ class DynamicCLI {
       this._callEvent('input', key)
     }
 
-    this._callEvent('keydown', this._data.input)
+    this._callEvent('keydown', key)
   }
 
   /** Call an event */
