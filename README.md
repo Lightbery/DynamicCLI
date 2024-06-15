@@ -51,6 +51,8 @@ new DynamicCLI(<options>) // Create a CLI
   * `allowSwitchPage <boolean>` | Whether the user is allowed to switch pages. `Default: true`
 
 ## Getters
+ * `.options <DynamicCliOptions>` | Get the options for the CLI.
+ * `.size <{ width: number, height: number }>` | Get the size of the CLI.
  * `.pages <string[]>` | Get IDs of all the pages.
  * `.input <string>` | Get user input.
  * `.currentPage <undefined | string>` | Get the ID of current page.
