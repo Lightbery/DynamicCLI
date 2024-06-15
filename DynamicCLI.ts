@@ -171,7 +171,7 @@ class DynamicCLI {
   public listen (type: 'scroll', callback: (info: { page: string, cursorY: number, scrollY: number }) => any): void
   public listen (type: 'switchPage', callback: (pageID: string) => any): void
   public listen (type: 'enter', callback: (input: string) => any): void
-  public listen (type: 'input', callback: (key: Buffer) => any): void
+  public listen (type: 'input' | 'keydown', callback: (key: Buffer) => any): void
   public listen (type: string, callback: (...args: any) => any): string {
     const id = generateID(5, Object.keys(this._listeners))
 
@@ -377,6 +377,8 @@ class DynamicCLI {
 
       this._callEvent('input', key)
     }
+
+    this._callEvent('keydown', this._data.input)
   }
 
   /** Call an event */
