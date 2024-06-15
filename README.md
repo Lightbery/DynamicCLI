@@ -46,7 +46,7 @@ new DynamicCLI(<options>) // Create a CLI
   * `render <boolean>` | Should the CLI render stuff onto the console. `Default: true`
   * `renderInterval <number>` | The interval(ms) between each render. `Default: 25`
   * `pagePrefix_notSelected <string>` | The prefix for the page, when the line is not selected. `Default: " <lineNumber> | "`
-  * `pagePrefix_selected <string>` | The prefix for the page, when the line is selected. `Default: "${this._style.background_selected} ${this._style.text_selected}<lineNumber>${TextColor.reset}${this._style.background} | "`
+  * `pagePrefix_selected <string>` | The prefix for the page, when the line is selected. `Default: "${style.background_selected} ${style.text_selected}<lineNumber>${TextColor.reset}${style.background} | "`
   * `allowInput <boolean>` | Should the CLI take input from stdin. `Default: true`
   * `allowSwitchPage <boolean>` | Whether the user is allowed to switch pages. `Default: true`
 
