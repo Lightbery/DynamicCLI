@@ -326,7 +326,7 @@ class DynamicCLI {
       if (this._data.currentPage !== undefined) {
         const page = this._pages[this._data.currentPage]
 
-        if (keys.upArrow.includes(hex)) {
+        if (keys.upArrow.includes(hex) && (this._options.allowScroll === undefined || this._options.allowScroll === true)) {
           if (page.cursorY > page.scrollY) page.cursorY--
           else if (page.scrollY > 0) {
             page.cursorY--
@@ -334,7 +334,7 @@ class DynamicCLI {
           }
 
           this._callEvent('scroll', { page: this._data.currentPage, cursorY: page.cursorY, scrollY: page.scrollY })
-        } else if (keys.downArrow.includes(hex)) {
+        } else if (keys.downArrow.includes(hex) && (this._options.allowScroll === undefined || this._options.allowScroll === true)) {
           const size = this._getSize()
 
           if (page.cursorY - page.scrollY < (size.height - this._layout.length) - 1 && page.cursorY < page.content.length - 1) page.cursorY++
@@ -484,6 +484,7 @@ interface DynamicCliOptions {
   pagePrefix_selected?: string,
 
   allowInput?: boolean,
+  allowScroll?: boolean,
   allowSwitchPage?: boolean
 }
 
