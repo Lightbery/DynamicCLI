@@ -244,14 +244,14 @@ class DynamicCLI {
 
         page.content = page.callback()
 
-        const linePrefix_notSelected = this._options.pagePrefix_notSelected || ` <lineNumber> | ` 
-        const linePrefix_selected = this._options.pagePrefix_selected || `${this._style.background_selected} ${this._style.text_selected}<lineNumber>${TextColor.reset}${this._style.background} | `
+        const pagePrefix_notSelected = (this._options.pagePrefix_notSelected === undefined) ? ` <lineNumber> | ` : this._options.pagePrefix_notSelected
+        const pagePrefix_selected = (this._options.pagePrefix_selected === undefined) ? `${this._style.background_selected} ${this._style.text_selected}<lineNumber>${TextColor.reset}${this._style.background} | ` : this._options.pagePrefix_selected
 
         for (let i = page.scrollY; i < page.scrollY + (size.height - this._layout.length) && i < page.content.length; i++) {
           const lineNumber: string = (i + 1).toString().padStart(2, ' ')
 
-          if (page.cursorY === i) lines.push(`${linePrefix_selected.replaceAll('<lineNumber>', lineNumber)}${page.content[i]}`) 
-          else lines.push(`${linePrefix_notSelected.replaceAll('<lineNumber>', lineNumber)}${page.content[i]}`)
+          if (page.cursorY === i) lines.push(`${pagePrefix_selected.replaceAll('<lineNumber>', lineNumber)}${page.content[i]}`) 
+          else lines.push(`${pagePrefix_notSelected.replaceAll('<lineNumber>', lineNumber)}${page.content[i]}`)
         }
       }
 
