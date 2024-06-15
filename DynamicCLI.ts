@@ -123,7 +123,11 @@ class DynamicCLI {
       scrollY: 0
     }
 
-    if (this._data.currentPage === undefined) this._data.currentPage = id
+    if (this._data.currentPage === undefined) {
+      this._data.currentPage = id
+
+      this._oldRenderContent = []
+    }
 
     return this
   }
@@ -141,6 +145,8 @@ class DynamicCLI {
 
       if (pages.length === 0) this._data.currentPage = undefined
       else if (currentPageIndex >= pages.length) this._data.currentPage = pages[pages.length - 1]
+
+      this._oldRenderContent = []
     } else delete this._pages[id]
   }
 
