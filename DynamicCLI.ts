@@ -10,10 +10,10 @@ class DynamicCLI {
   private _style: Style = {
     background: BackgroundColor.reset,
 
-    selectBackground: BackgroundColor.white,
-    selectFont: TextColor.gray,
-    notSelectBackground: BackgroundColor.gray,
-    notSelectFont: TextColor.white
+    background_notSelected: BackgroundColor.gray,
+    text_notSelected: TextColor.white,
+    background_selected: BackgroundColor.white,
+    text_selected: TextColor.gray,
   }
 
   public interval!: any
@@ -229,8 +229,8 @@ class DynamicCLI {
       const tabs: string[] = []
 
       Object.keys(this._pages).forEach((id) => {
-        if (id === this._data.currentPage) tabs.push(`${this._style.selectBackground} ${this._style.selectFont}${this._pages[id].name} ${this._style.background}`)
-        else tabs.push(`${this._style.notSelectBackground} ${this._style.notSelectFont}${this._pages[id].name} ${this._style.background}`) 
+        if (id === this._data.currentPage) tabs.push(`${this._style.background_selected} ${this._style.text_selected}${this._pages[id].name} ${this._style.background}`)
+        else tabs.push(`${this._style.background_notSelected} ${this._style.text_notSelected}${this._pages[id].name} ${this._style.background}`) 
       })
 
       return [` ${tabs.join(' ')} `]
@@ -244,11 +244,14 @@ class DynamicCLI {
 
         page.content = page.callback()
 
+        const linePrefix_notSelected = this._options.pagePrefix_notSelected || ` <lineNumber> | ` 
+        const linePrefix_selected = this._options.pagePrefix_selected || `${this._style.background_selected} ${this._style.text_selected}<lineNumber>${TextColor.reset}${this._style.background} | `
+
         for (let i = page.scrollY; i < page.scrollY + (size.height - this._layout.length) && i < page.content.length; i++) {
           const lineNumber: string = (i + 1).toString().padStart(2, ' ')
 
-          if (page.cursorY === i) lines.push(`${this._style.selectBackground} ${this._style.selectFont}${lineNumber}${TextColor.reset}${this._style.background} | ${page.content[i]}`) 
-          else lines.push(` ${lineNumber} | ${page.content[i]}`)
+          if (page.cursorY === i) lines.push(`${linePrefix_selected.replaceAll('<lineNumber>', lineNumber)}${page.content[i]}`) 
+          else lines.push(`${linePrefix_notSelected.replaceAll('<lineNumber>', lineNumber)}${page.content[i]}`)
         }
       }
 
@@ -260,7 +263,7 @@ class DynamicCLI {
     if (component.type === 'input') {
       const size = this._getSize()
 
-      let string: string = ` ${(this._data.input.length > 0) ? `${this._style.selectBackground}${this._style.selectFont}` : `${this._style.notSelectBackground}${this._style.notSelectFont}`} `
+      let string: string = ` ${(this._data.input.length > 0) ? `${this._style.background_selected}${this._style.text_selected}` : `${this._style.background_notSelected}${this._style.text_notSelected}`} `
 
       if (this._data.input.length > 0) string += this._data.input
       else string += component.placeholder || `⇧⇩ Scroll | ⇦⇨ Switch Page | Type to give input`
@@ -469,6 +472,9 @@ interface DynamicCliOptions {
   render?: boolean,
   renderInterval?: number,
 
+  pagePrefix_notSelected?: string,
+  pagePrefix_selected?: string,
+
   allowInput?: boolean,
   allowSwitchPage?: boolean
 }
@@ -484,10 +490,10 @@ interface Component {
 interface Style {
   background: string,
 
-  selectBackground: string,
-  selectFont: string,
-  notSelectBackground: string,
-  notSelectFont: string 
+  background_notSelected: string,
+  text_notSelected: string 
+  background_selected: string,
+  text_selected: string,
 }
 
 /** A page */
