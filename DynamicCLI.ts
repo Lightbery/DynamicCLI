@@ -208,7 +208,7 @@ class DynamicCLI {
       let characters = this._sperateColor(line.replaceAll('\n', '\\n'))
       let planText = characters.map((character) => character.text).join('')
 
-      if (wcwidth(planText) < size.width) characters.push({ color: this._style.background, text: ' '.repeat(size.width - wcwidth(planText)) })
+      if (wcwidth(planText) < size.width) characters.push({ sequence: this._style.background, text: ' '.repeat(size.width - wcwidth(planText)) })
       else {
         while (wcwidth(planText) > size.width) {
           characters = characters.slice(0, characters.length-1)
@@ -216,7 +216,7 @@ class DynamicCLI {
         }
       }
 
-      const string = `${this._style.background}${characters.map((character) => `${(character.color === undefined) ? '' : character.color}${character.text}`).join('')}`
+      const string = `${this._style.background}${characters.map((character) => `${(character.sequence === undefined) ? '' : character.sequence}${character.text}`).join('')}`
 
       if (string !== this._oldRenderContent[index]) changes.push({ line: index, content: string })
 
@@ -288,29 +288,29 @@ class DynamicCLI {
   }
 
   /** Seperate the color from the text */
-  private _sperateColor (string: string): { color?: string, text: string }[] {
-    const characters: { color?: string, text: string }[] = []
+  private _sperateColor (text: string): { sequence?: string, text: string }[] {
+    const characters: { sequence?: string, text: string }[] = []
 
-    let color: string = '' 
-
-    for (let i = 0; i < string.length; i++) {
-      if (string[i] === '\x1b') {
+    let sequence: string = '' 
+  
+    for (let i = 0; i < text.length; i++) {
+      if (text[i] === '\x1b') {
         const oldIndex = i
 
-        while (string[i] !== 'm' && i < string.length) {
-          color += string[i]
+        while (text[i] !== 'm' && i < text.length) {
+          sequence += text[i]
 
           i++
         }
 
-        if (string[i] === 'm') color += 'm'
+        if (text[i] === 'm') sequence += 'm'
         else i = oldIndex
       } else {
-        if (color === undefined) characters.push({ text: string[i] })
+        if (sequence === undefined) characters.push({ text: text[i] })
         else {
-          characters.push({ color, text: string[i] })
-
-          color = '' 
+          characters.push({ sequence, text: text[i] })
+  
+          sequence = '' 
         }
       }
     }
