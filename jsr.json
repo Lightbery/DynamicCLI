@@ -1,7 +1,7 @@
 {
   "name": "@lightbery/dynamic-cli",
 
-  "version": "1.1.4",
+  "version": "1.1.5",
 
   "exports": "./DynamicCLI.ts"
 }
