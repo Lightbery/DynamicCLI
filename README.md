@@ -10,6 +10,8 @@ new DynamicCLI()
   .createPage('Page2', 'Another Page', () => ['This', 'Is', 'Another', 'Page'])
 ```
 
+![Demo](./Demo.png)
+
 ## Installation
 You can simply copy `DynamicCLI.ts` into your project or use [JSR to install](https://jsr.io/@lightbery/dynamic-cli).
 
