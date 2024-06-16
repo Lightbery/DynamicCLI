@@ -34,6 +34,7 @@ You can simply copy `DynamicCLI.ts` into your project or use [JSR to install](ht
   * [removeListener()](#removelistener)
   * [removeAllListeners()](#removealllisteners)
   * [render()](#render)
+* [Style](#style)
 * [Component](#component)
 * [TextColor](#textcolor)
 * [BackgroundColor](#backgroundcolor)
@@ -87,7 +88,9 @@ new DynamicCLI(<options>) // Create a CLI
 ```ts
 .setStyle(<style>) // Set the style of the CLI
 ```
-* `style <object>`
+* `style <object>` | A [style object](#style)
+
+> `return <DynamicCLI>`
 
 **- Default Style -**
 ```ts
@@ -181,7 +184,19 @@ new DynamicCLI(<options>) // Create a CLI
 ```ts
 .render() // Render the CLI
 ```
-> `return <{ line: number, content: string }[]>`
+> `return <{ line: number, content: string }[]>` (The line that need to update)
+
+# Style
+```ts
+{
+  background: string,
+
+  background_notSelected: string,
+  text_notSelected: string 
+  background_selected: string,
+  text_selected: string,
+}
+```
 
 # Component
 ```ts
